@@ -1,34 +1,39 @@
-FROM qlustor/nginx-php-fpm
+FROM alpine:3.2
 MAINTAINER Leigh Phillips <neurocis@qlustor.com>
 
+# Install supervisord
+RUN apk --update add supervisor && \
+    rm -rf /var/cache/apk/*
+
+# Install nginx-php-fpm
+RUN apk --update add nginx php-fpm php-cli && \
+#    sed -i \
+#        -e 's/group =.*/group = nginx/' \
+#        -e 's/user =.*/user = nginx/' \
+#        -e 's/listen\.owner.*/listen\.owner = nginx/' \
+#        -e 's/listen\.group.*/listen\.group = nginx/' \
+#        -e 's/error_log =.*/error_log = \/dev\/stdout/' \
+#        /etc/php/php-fpm.conf && \
+#    sed -i \
+#        -e '/open_basedir =/s/^/\;/' \
+#        /etc/php/php.ini && \
+    rm -rf /var/www/* && \
+    rm -rf /var/cache/apk/*
+
+# Install phpvirtualbox
 ENV PHPVBOX_BUILD phpvirtualbox-5.0-4
 ENV PHPVBOX_DLURL http://sourceforge.net/projects/phpvirtualbox/files/$PHPVBOX_BUILD.zip/download
-#ENV PHPVBOX_DLURL http://www.mirrorservice.org/sites/downloads.sourceforge.net/p/ph/phpvirtualbox/$PHPVBOX_BUILD.zip
-
-# install phpvirtualbox
 RUN apk --update add wget unzip && \
     wget $PHPVBOX_DLURL -O /var/$PHPVBOX_BUILD.zip && \
     unzip /var/$PHPVBOX_BUILD.zip -d /var && \
     mv /var/$PHPVBOX_BUILD/* /var/www && \
     rm -f /var/$PHPVBOX_BUILD.zip && \
-    echo "<?php return array(); ?>" > /var/www/config-servers.php && \
-    echo "<?php phpinfo(); ?>" > /var/www/phpinfo.php && \
-    chown -R nginx:nginx /var/www && \
     apk del wget unzip && \
     rm -rf /var/cache/apk/*
 
-# add nginx configuration
-ADD nginx.conf /docker/config/nginx.conf
+ADD . /
 
-# add server config with linked instances enhancement
-ADD config.php /var/www/config.php
-
-# add startup script to write linked instances to server config
-ADD servers-from-env.php /docker/servers-from-env.php
-
-# expose only nginx HTTP port
-EXPOSE 80
-
-# write linked instances to config, then monitor all services
-ENTRYPOINT php /docker/servers-from-env.php && /docker/entrypoint.sh nginx-php-fpm
+EXPOSE 80 #443
+#VOLUME /var/www
+ENTRYPOINT php /servers-from-env.php && supervisord --nodaemon --configuration="/etc/supervisord.conf"
 

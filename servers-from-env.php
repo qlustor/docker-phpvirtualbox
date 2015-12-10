@@ -36,10 +36,16 @@ foreach ($_SERVER as $key => $value) {
 }
 
 if (!$servers) {
-    echo 'Error: No vboxwebsrv instance linked? Use "--link containername:myname"' . PHP_EOL;
-    exit(1);
+    echo 'Warn: No vboxwebsrv instance linked? Use "--link containername:myname", falling back to localhost.' . PHP_EOL;
+    $servers []= array(
+        'name' => 'localhost',
+        'username' => 'vbox',
+        'password' => 'pass',
+        'authMaster' => true,
+        'location' => 'http://127.0.0.1:18083/'
+    );
 }
 
-$config = '<?php return ' . var_export($servers, true) . ';';
+$config = '<?php return ' . var_export($servers, true) . '; ?>';
 file_put_contents('/var/www/config-servers.php', $config);
 
