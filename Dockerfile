@@ -33,7 +33,7 @@ RUN apk --update add wget unzip && \
 
 ADD . /
 
-EXPOSE 80 #443
+EXPOSE 80
 #VOLUME /var/www
 ENTRYPOINT php /servers-from-env.php && supervisord --nodaemon --configuration="/etc/supervisord.conf"
 
