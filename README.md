@@ -1,3 +1,5 @@
+[![](https://badge.imagelayers.io/qlustor/phpvirtualbox:latest.svg)](https://imagelayers.io/?images=qlustor/phpvirtualbox:latest 'Get your own badge on imagelayers.io')
+
 # docker-phpvirtualbox
 
 [phpVirtualBox](http://sourceforge.net/projects/phpvirtualbox/) is a modern web interface that allows
@@ -17,7 +19,7 @@ environment - mirroring the VirtualBox GUI through its web interface.
 
 ## Usage
 
-This docker image is available as a [trusted build on the docker index](https://index.docker.io/u/clue/phpvirtualbox/).
+This docker image is available as a [trusted build on the docker index](https://index.docker.io/u/qlustor/phpvirtualbox/).
 Using this image for the first time will start a download automatically.
 Further runs will be immediate, as the image will be cached locally.
 
@@ -70,7 +72,7 @@ Now that all `vboxwebsrv` instance are up, we can link everything together and s
 The recommended way to run this container looks like this:
 
 ```bash
-$ docker run -d --link vb2:FirstPC --link vb3:MyLaptop -p 80:80 clue/phpvirtualbox
+$ docker run -d --link vb2:FirstPC --link vb3:MyLaptop -p 80:80 qlustor/phpvirtualbox
 ```
 
 You can now point your webbrowser to this URL:
@@ -84,4 +86,5 @@ This is a rather common setup following docker's conventions:
 * `-d` will run a detached session running in the background
 * `-p {OutsidePort}:80` will bind the webserver to the given outside port
 * `--link {ContainerName}:{DisplayName}` links a `vboxwebsrv` instance with the given {ContainerName} and exposes it under the visual {DisplayName}
-* `clue/phpvirtualbox` the name of this docker image
+* `qlustor/phpvirtualbox` the name of this docker image
+

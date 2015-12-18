@@ -42,7 +42,7 @@ if (!$servers) {
         'username' => 'vbox',
         'password' => 'pass',
         'authMaster' => true,
-        'location' => 'http://127.0.0.1:18083/'
+        'location' => 'http://' . shell_exec("netstat -nr | grep '^0\.0\.0\.0' | awk '{print $2}'") . ':18083/'
     );
 }
 
