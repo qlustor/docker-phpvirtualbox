@@ -1,39 +1,39 @@
-FROM debian:jessie
-MAINTAINER Leigh Phillips <neurocis@qlustor.com>
+FROM alpine:3.2
+MAINTAINER Team QLUSTOR <team@qlustor.com>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  wget unzip supervisor \
-  nginx php5-fpm php5-cli
+# Install supervisord
+RUN apk --update add supervisor && \
+    rm -rf /var/cache/apk/*
 
-ENV PHPVBOX_NAME phpvirtualbox-5.0-4
+# Install nginx-php-fpm
+RUN apk --update add nginx php php-fpm php-cli php-soap php-json && \
+    sed -i \
+        -e 's/group =.*/group = nginx/' \
+        -e 's/user =.*/user = nginx/' \
+        -e 's/listen\.owner.*/listen\.owner = nginx/' \
+        -e 's/listen\.group.*/listen\.group = nginx/' \
+        -e 's/error_log =.*/error_log = \/dev\/stdout/' \
+        /etc/php/php-fpm.conf && \
+    sed -i \
+        -e '/open_basedir =/s/^/\;/' \
+        /etc/php/php.ini && \
+    rm -rf /var/www/* && \
+    rm -rf /var/cache/apk/*
 
-# install phpvirtualbox for 5.0
-#RUN wget http://sourceforge.net/projects/phpvirtualbox/files/$PHPVBOX_NAME.zip/download -O /var/$PHPVBOX_NAME.zip && \
-RUN wget http://www.mirrorservice.org/sites/downloads.sourceforge.net/p/ph/phpvirtualbox/$PHPVBOX_NAME.zip -O /var/$PHPVBOX_NAME.zip && \
-    unzip /var/$PHPVBOX_NAME.zip -d /var && \
-    mv /var/$PHPVBOX_NAME/* /var/www && \
-    rm /var/$PHPVBOX_NAME.zip && \
-    echo "<?php return array(); ?>" > /var/www/config-servers.php && \
-    chown www-data:www-data -R /var/www
-#    chown nginx:nginx -R /var/www
-ADD config.php /var/www/config.php
+# Install phpvirtualbox
+ENV PHPVBOX_BUILD phpvirtualbox-5.0-4
+ENV PHPVBOX_DLURL http://sourceforge.net/projects/phpvirtualbox/files/$PHPVBOX_BUILD.zip/download
+RUN apk --update add wget unzip && \
+    wget $PHPVBOX_DLURL -O /var/$PHPVBOX_BUILD.zip && \
+    unzip /var/$PHPVBOX_BUILD.zip -d /var && \
+    mv /var/$PHPVBOX_BUILD/* /var/www && \
+    chown -R nginx:nginx /var/www/* && \
+    rm -f /var/$PHPVBOX_BUILD.zip && \
+    apk del wget unzip && \
+    rm -rf /var/cache/apk/*
 
-# add phpvirtualbox as the only nginx site
-ADD phpvirtualbox.nginx.conf /etc/nginx/sites-available/phpvirtualbox
-RUN mkdir -p /etc/nginx/sites-enabled && \
-    ln -s /etc/nginx/sites-available/phpvirtualbox /etc/nginx/sites-enabled/phpvirtualbox && \
-    rm -f /etc/nginx/sites-enabled/default
+ADD . /
 
-# use supervisor to monitor all services
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# add startup script to write linked instances to server config
-ADD servers-from-env.php /servers-from-env.php
-
-# write linked instances to config, then monitor all services
-CMD php /servers-from-env.php && \
-  supervisord -c /etc/supervisor/conf.d/supervisord.conf
-
-# expose only nginx HTTP port
 EXPOSE 80
+ENTRYPOINT php /servers-from-env.php && supervisord --nodaemon --configuration="/etc/supervisord.conf"
 

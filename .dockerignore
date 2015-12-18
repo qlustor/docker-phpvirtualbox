@@ -1,0 +1,3 @@
+.git
+.dockerignore
+dockerbuild-test.sh
