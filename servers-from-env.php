@@ -36,13 +36,13 @@ foreach ($_SERVER as $key => $value) {
 }
 
 if (!$servers) {
-    echo 'Warn: No vboxwebsrv instance linked? Use "--link containername:myname", falling back to localhost.' . PHP_EOL;
+    echo 'Warn: No vboxwebsrv instance linked? Use "--link containername:myname", falling back to dockerhost.' . PHP_EOL;
     $servers []= array(
-        'name' => 'localhost',
+        'name' => 'dockerhost',
         'username' => 'vbox',
         'password' => 'pass',
         'authMaster' => true,
-        'location' => 'http://' . shell_exec("netstat -nr | grep '^0\.0\.0\.0' | awk '{print $2}'") . ':18083/'
+        'location' => 'http://' . trim( shell_exec( "netstat -nr | grep '^0\.0\.0\.0' | awk '{print $2}'" ) ) . ':18083/'
     );
 }
 
