@@ -1,3 +1,7 @@
 .git
 .dockerignore
 dockerbuild-test.sh
+dockercleanup-all.sh
+dockercleanup-containers.sh
+dockercleanup-images.sh
+
