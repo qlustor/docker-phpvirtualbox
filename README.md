@@ -1,4 +1,4 @@
-[![](https://badge.imagelayers.io/qlustor/phpvirtualbox:latest.svg)](https://imagelayers.io/?images=qlustor/phpvirtualbox:latest 'Get your own badge on imagelayers.io')
+[![](https://badge.imagelayers.io/qlustor/phpvirtualbox.svg)](https://imagelayers.io/?images=qlustor/phpvirtualbox 'Get your own badge on imagelayers.io')
 
 # docker-phpvirtualbox
 

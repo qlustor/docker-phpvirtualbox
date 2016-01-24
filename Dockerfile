@@ -21,7 +21,7 @@ RUN apk --update add nginx php php-fpm php-cli php-soap php-json && \
     rm -rf /var/cache/apk/*
 
 # Install phpvirtualbox
-ENV PHPVBOX_BUILD phpvirtualbox-5.0-4
+ENV PHPVBOX_BUILD phpvirtualbox-5.0-5
 ENV PHPVBOX_DLURL http://sourceforge.net/projects/phpvirtualbox/files/$PHPVBOX_BUILD.zip/download
 RUN apk --update add wget unzip && \
     wget $PHPVBOX_DLURL -O /var/$PHPVBOX_BUILD.zip && \
