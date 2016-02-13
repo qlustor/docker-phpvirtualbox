@@ -26,7 +26,7 @@ Further runs will be immediate, as the image will be cached locally.
 This image provides the phpVirtualBox web interface that communicates with any
 number of VirtualBox installations on your computers.
 
-![](https://cloud.githubusercontent.com/assets/776829/3137332/d8500a54-e850-11e3-921d-479d43c9c80a.png)
+[![](https://badge.imagelayers.io/qlustor/phpvirtualbox.svg)](https://imagelayers.io/?images=qlustor/phpvirtualbox 'Get your own badge on imagelayers.io')
 
 As per the above diagram the following examples assume we have two computers `PC2` and `PC3`
 in our cluster that we want to manage through a single installation of phpVirtualBox.
