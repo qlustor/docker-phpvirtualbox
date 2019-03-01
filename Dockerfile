@@ -6,15 +6,16 @@ MAINTAINER Team QLUSTOR <team@qlustor.com>
 # Install phpvirtualbox
 ENV PHPVBOX_BUILD 5.2-1
 ENV PHPVBOX_DLURL https://github.com/phpvirtualbox/phpvirtualbox/archive/$PHPVBOX_BUILD.zip
+ENV PHPVBOX_FNAME phpvirtualbox-$PHPVBOX_BUILD
 RUN apk-install --update ca-certificates                \
  && update-ca-certificates                              \
  && apk-install wget unzip                              \
- && wget $PHPVBOX_DLURL -O /var/$PHPVBOX_BUILD.zip      \
- && unzip /var/$PHPVBOX_BUILD.zip -d /var               \
- && mv /var/$PHPVBOX_BUILD/* /var/www                   \
+ && wget $PHPVBOX_DLURL -O /var/$PHPVBOX_FNAME.zip      \
+ && unzip /var/$PHPVBOX_FNAME.zip -d /var               \
+ && mv /var/$PHPVBOX_FNAME/* /var/www                   \
  && chown -R nginx:nginx /var/www/*                     \
- && rm -f /var/$PHPVBOX_BUILD.zip                       \
- && rm -rf /var/$PHPVBOX_BUILD
+ && rm -f /var/$PHPVBOX_FNAME.zip                       \
+ && rm -rf /var/$PHPVBOX_FNAME
 ADD . /
 
 EXPOSE 80
