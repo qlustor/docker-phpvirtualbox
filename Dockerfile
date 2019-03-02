@@ -4,8 +4,8 @@ FROM qlustor/nginx-php-fpm
 MAINTAINER Team QLUSTOR <team@qlustor.com>
 
 # Install phpvirtualbox
-ENV PHPVBOX_BUILD 5.2-1
-ENV PHPVBOX_DLURL https://github.com/phpvirtualbox/phpvirtualbox/archive/$PHPVBOX_BUILD.zip
+ENV PHPVBOX_BUILD develop
+ENV PHPVBOX_DLURL https://github.com/phpvirtualbox/phpvirtualbox/archive/develop.zip
 ENV PHPVBOX_FNAME phpvirtualbox-$PHPVBOX_BUILD
 RUN apk-install --update ca-certificates                \
  && update-ca-certificates                              \
